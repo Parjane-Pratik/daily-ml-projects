@@ -65,14 +65,17 @@ def clean_data(df):
 
     df_dirty = df.copy()
 
-    # Introduce missing values for demonstration
+    # Introduce synthetic issues so we can demonstrate cleaning techniques
+    missing_rate = 0.05  # proportion of values to set as missing
+    num_duplicates = 5   # number of duplicate rows to inject
+
     rng = np.random.default_rng(42)
     for col in df_dirty.select_dtypes(include=[np.number]).columns:
-        mask = rng.random(len(df_dirty)) < 0.05
+        mask = rng.random(len(df_dirty)) < missing_rate
         df_dirty.loc[mask, col] = np.nan
 
     # Introduce duplicate rows for demonstration
-    duplicates = df_dirty.sample(n=5, random_state=42)
+    duplicates = df_dirty.sample(n=num_duplicates, random_state=42)
     df_dirty = pd.concat([df_dirty, duplicates], ignore_index=True)
 
     print(f"\nDirty dataset shape: {df_dirty.shape}")
